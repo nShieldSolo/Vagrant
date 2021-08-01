@@ -1,0 +1,20 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: app
+  namespace: dev
+spec:
+  tls:
+    - hosts:
+        - api-dev.checkinpro.vn
+      secretName: checkinpro-server-serect
+  rules:
+    # Tên miền truy cập
+    - host: api-dev.checkinpro.vn
+      http:
+        paths:
+          - path: /
+            backend:
+              # dịch vụ phục vụ tương ứng với tên miền và path
+              serviceName: checkinpro-api
+              servicePort: 5200

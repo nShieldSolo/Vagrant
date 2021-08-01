@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: checkinpro-svc
+  namespace: dev
+spec:
+  
+  selector:
+    run: checkinpro-api
+  ports:
+  - port: 5200
+    protocol: TCP
+    name: http
+    targetPort: 5200
+  sessionAffinity: None
+  type: ClusterIP

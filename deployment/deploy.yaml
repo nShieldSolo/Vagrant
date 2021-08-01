@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: checkinpro-api
+spec:
+  # replica POD
+  replicas: 1
+
+  # thiet lap cac pod
+  selector:
+    matchLabels:
+      app: checkinpro-api
+
+  template:
+    metadata:
+      name: apiapp
+      labels:
+        app: checkinpro-api
+    spec:
+      terminationGracePeriodSeconds: 30
+      containers:
+        - name: nodes
+          image: registry.unit.vn/checkinpro-api:2.26
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 5200
+          resources:
+            limits:
+              memory: "1Gi"
+              cpu: "500m"
+      imagePullSecrets:
+        - name: private-registry

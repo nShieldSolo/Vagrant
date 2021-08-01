@@ -1,0 +1,35 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+Vagrant.configure("2") do |config|
+  config.vm.box = "centos/7"
+
+  # Config IP
+    #public ip
+    config.vm.network "public_network",
+    bridge: "Realtek PCIe 2.5GbE Family Controller",
+    ip: "192.168.1.20"
+    #private ip
+    config.vm.network "private_network",
+    ip: "172.16.10.100"
+
+  # Config Hardware
+  config.vm.hostname = "hanoi"
+  config.vm.provider "virtualbox" do |vb|
+    vb.name = "hanoi"
+    vb.cpus = 4
+    vb.memory = "4096"
+  end 
+
+  config.vm.provision "shell", path: "./../script/centos-common.sh"
+  config.vm.provision "shell", path: "./../script/installK8s.sh"
+
+  config.vm.provision "shell", inline: <<-SHELL
+    echo "11052194" | passwd --stdin root
+    sudo sed -i 's/^PasswordAuthentication no/PasswordAuthentication yes/' /etc/ssh/sshd_config
+    sudo sed -i 's/^#PermitRootLogin yes/PermitRootLogin yes/' /etc/ssh/sshd_config
+    systemctl reload sshd
+    systemctl disable firewalld
+    systemctl stop firewalld
+  SHELL
+
+end
